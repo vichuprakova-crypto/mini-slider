@@ -88,9 +88,10 @@ function init(dm = 0) {
   animation: tistolsfillCircle `+ slide_duration +`s linear forwards; 
 }
 .tistolsPicMS .tn-atom {
-        background-position: center center;
+    background-position: center center;
     background-size: cover;
     background-repeat: no-repeat;
+    transition: opacity .6s ease;
 }
 @keyframes tistolsfillCircle {
   to {
@@ -156,7 +157,14 @@ function updateInfo(tabNumber) {
         $('.tistolsTitleMS .tn-atom').text(data.title);
         $('.tistolsPersonMS .tn-atom').text(data.person);
         $('.tistolsDescMS .tn-atom').text(data.decs);
-        $('.tistolsPicMS .tn-atom').css('background-image', 'url(' + data.pic + ')');  
+        var pic = $('.tistolsPicMS .tn-atom');
+
+pic.css('opacity', '0');
+
+setTimeout(function() {
+    pic.css('background-image', 'url(' + data.pic + ')');
+    pic.css('opacity', '1');
+}, 300);  
         
         $('.tistolsTitleMS .tn-atom').addClass('fade');
         $('.tistolsPersonMS .tn-atom').addClass('fade');
@@ -308,9 +316,10 @@ function initGenerated(generated_object, slide_duration) {
   animation: tistolsfillCircle `+ slide_duration +`s linear forwards; 
 }
 .tistolsPicMS .tn-atom {
-        background-position: center center;
+    background-position: center center;
     background-size: cover;
     background-repeat: no-repeat;
+    transition: opacity .6s ease;
 }
 @keyframes tistolsfillCircle {
   to {
@@ -376,7 +385,14 @@ function updateInfo(tabNumber) {
         $('.tistolsTitleMS .tn-atom').text(data.title);
         $('.tistolsPersonMS .tn-atom').text(data.person);
         $('.tistolsDescMS .tn-atom').text(data.decs);
-        $('.tistolsPicMS .tn-atom').css('background-image', 'url(' + data.pic + ')');  
+        var pic = $('.tistolsPicMS .tn-atom');
+
+pic.css('opacity', '0');
+
+setTimeout(function() {
+    pic.css('background-image', 'url(' + data.pic + ')');
+    pic.css('opacity', '1');
+}, 300);  
         
         $('.tistolsTitleMS .tn-atom').addClass('fade');
         $('.tistolsPersonMS .tn-atom').addClass('fade');
