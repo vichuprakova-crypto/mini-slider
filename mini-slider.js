@@ -112,7 +112,7 @@ function init(dm = 0) {
     }
 
     .fade {
-        animation: fade 0.5s ease forwards !important;
+        animation: fade 0.8s ease-out forwards !important;
     }
     
     @keyframes fade {
@@ -168,7 +168,7 @@ function updateInfo(tabNumber) {
             $('.tistolsPersonMS .tn-atom').removeClass('fade');
             $('.tistolsDescMS .tn-atom').removeClass('fade');
             $('.tistolsPicMS .tn-atom').removeClass('fade');
-        }, 500);
+        }, 800);
     }
 }
 
@@ -332,17 +332,17 @@ function initGenerated(generated_object, slide_duration) {
     }
 
     .fade {
-        animation: fade 0.5s ease forwards !important;
+        animation: fade 0.8s ease-out forwards !important;
     }
     
     @keyframes fade {
         0% {
             opacity: 0;
-            transform: translateX(50px)
+            transform: none
         }
         100% {
             opacity: 1;
-            transform: translateX(0)
+            transform: none
         }
     }
 </style>
@@ -388,7 +388,7 @@ function updateInfo(tabNumber) {
             $('.tistolsPersonMS .tn-atom').removeClass('fade');
             $('.tistolsDescMS .tn-atom').removeClass('fade');
             $('.tistolsPicMS .tn-atom').removeClass('fade');
-        }, 500);
+        }, 800);
     }
 }
 
