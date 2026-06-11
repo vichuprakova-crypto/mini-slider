@@ -91,7 +91,6 @@ function init(dm = 0) {
     background-position: center center;
     background-size: cover;
     background-repeat: no-repeat;
-    transition: opacity .6s ease;
 }
 @keyframes tistolsfillCircle {
   to {
@@ -119,11 +118,11 @@ function init(dm = 0) {
     @keyframes fade {
         0% {
             opacity: 0;
-            transform: translateX(50px)
+            transform: none
         }
         100% {
             opacity: 1;
-            transform: translateX(0)
+            transform: none
         }
     }
 </style>
@@ -157,14 +156,7 @@ function updateInfo(tabNumber) {
         $('.tistolsTitleMS .tn-atom').text(data.title);
         $('.tistolsPersonMS .tn-atom').text(data.person);
         $('.tistolsDescMS .tn-atom').text(data.decs);
-        var pic = $('.tistolsPicMS .tn-atom');
-
-pic.css('opacity', '0');
-
-setTimeout(function() {
-    pic.css('background-image', 'url(' + data.pic + ')');
-    pic.css('opacity', '1');
-}, 300);  
+        $('.tistolsPicMS .tn-atom').css('background-image', 'url(' + data.pic + ')'); 
         
         $('.tistolsTitleMS .tn-atom').addClass('fade');
         $('.tistolsPersonMS .tn-atom').addClass('fade');
@@ -319,7 +311,6 @@ function initGenerated(generated_object, slide_duration) {
     background-position: center center;
     background-size: cover;
     background-repeat: no-repeat;
-    transition: opacity .6s ease;
 }
 @keyframes tistolsfillCircle {
   to {
@@ -385,14 +376,7 @@ function updateInfo(tabNumber) {
         $('.tistolsTitleMS .tn-atom').text(data.title);
         $('.tistolsPersonMS .tn-atom').text(data.person);
         $('.tistolsDescMS .tn-atom').text(data.decs);
-        var pic = $('.tistolsPicMS .tn-atom');
-
-pic.css('opacity', '0');
-
-setTimeout(function() {
-    pic.css('background-image', 'url(' + data.pic + ')');
-    pic.css('opacity', '1');
-}, 300);  
+        $('.tistolsPicMS .tn-atom').css('background-image', 'url(' + data.pic + ')'); 
         
         $('.tistolsTitleMS .tn-atom').addClass('fade');
         $('.tistolsPersonMS .tn-atom').addClass('fade');
