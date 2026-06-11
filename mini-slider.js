@@ -110,7 +110,6 @@ function init(dm = 0) {
 
 .tistolsPicMS .tn-atom.is-changing::before {
     opacity: 1;
-    transition: none;
 }
 @keyframes tistolsfillCircle {
   to {
@@ -187,7 +186,7 @@ pic.css('background-image', 'url(' + data.pic + ')');
 
 setTimeout(function() {
     pic.removeClass('is-changing');
-}, 20);
+}, 800);
         
         $('.tistolsTitleMS .tn-atom').addClass('fade');
         $('.tistolsPersonMS .tn-atom').addClass('fade');
@@ -359,7 +358,6 @@ function initGenerated(generated_object, slide_duration) {
 
 .tistolsPicMS .tn-atom.is-changing::before {
     opacity: 1;
-    transition: none;
 }
 @keyframes tistolsfillCircle {
   to {
@@ -436,7 +434,7 @@ pic.css('background-image', 'url(' + data.pic + ')');
 
 setTimeout(function() {
     pic.removeClass('is-changing');
-}, 20);
+}, 800);
         
         $('.tistolsTitleMS .tn-atom').addClass('fade');
         $('.tistolsPersonMS .tn-atom').addClass('fade');
