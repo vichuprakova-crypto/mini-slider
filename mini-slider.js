@@ -91,6 +91,26 @@ function init(dm = 0) {
     background-position: center center;
     background-size: cover;
     background-repeat: no-repeat;
+    position: relative;
+    overflow: hidden;
+}
+
+.tistolsPicMS .tn-atom::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background-image: var(--tistols-prev-pic);
+    background-position: center center;
+    background-size: cover;
+    background-repeat: no-repeat;
+    opacity: 0;
+    transition: opacity .8s ease;
+    pointer-events: none;
+}
+
+.tistolsPicMS .tn-atom.is-changing::before {
+    opacity: 1;
+    transition: none;
 }
 @keyframes tistolsfillCircle {
   to {
@@ -156,18 +176,27 @@ function updateInfo(tabNumber) {
         $('.tistolsTitleMS .tn-atom').text(data.title);
         $('.tistolsPersonMS .tn-atom').text(data.person);
         $('.tistolsDescMS .tn-atom').text(data.decs);
-        $('.tistolsPicMS .tn-atom').css('background-image', 'url(' + data.pic + ')'); 
+        var pic = $('.tistolsPicMS .tn-atom');
+var oldPic = pic.css('background-image');
+
+pic.css('--tistols-prev-pic', oldPic);
+pic.addClass('is-changing');
+pic[0].offsetHeight;
+
+pic.css('background-image', 'url(' + data.pic + ')');
+
+setTimeout(function() {
+    pic.removeClass('is-changing');
+}, 20);
         
         $('.tistolsTitleMS .tn-atom').addClass('fade');
         $('.tistolsPersonMS .tn-atom').addClass('fade');
         $('.tistolsDescMS .tn-atom').addClass('fade');
-        $('.tistolsPicMS .tn-atom').addClass('fade');
 
         setTimeout(function() {
             $('.tistolsTitleMS .tn-atom').removeClass('fade');
             $('.tistolsPersonMS .tn-atom').removeClass('fade');
             $('.tistolsDescMS .tn-atom').removeClass('fade');
-            $('.tistolsPicMS .tn-atom').removeClass('fade');
         }, 800);
     }
 }
@@ -311,6 +340,26 @@ function initGenerated(generated_object, slide_duration) {
     background-position: center center;
     background-size: cover;
     background-repeat: no-repeat;
+    position: relative;
+    overflow: hidden;
+}
+
+.tistolsPicMS .tn-atom::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background-image: var(--tistols-prev-pic);
+    background-position: center center;
+    background-size: cover;
+    background-repeat: no-repeat;
+    opacity: 0;
+    transition: opacity .8s ease;
+    pointer-events: none;
+}
+
+.tistolsPicMS .tn-atom.is-changing::before {
+    opacity: 1;
+    transition: none;
 }
 @keyframes tistolsfillCircle {
   to {
@@ -376,18 +425,27 @@ function updateInfo(tabNumber) {
         $('.tistolsTitleMS .tn-atom').text(data.title);
         $('.tistolsPersonMS .tn-atom').text(data.person);
         $('.tistolsDescMS .tn-atom').text(data.decs);
-        $('.tistolsPicMS .tn-atom').css('background-image', 'url(' + data.pic + ')'); 
+        var pic = $('.tistolsPicMS .tn-atom');
+var oldPic = pic.css('background-image');
+
+pic.css('--tistols-prev-pic', oldPic);
+pic.addClass('is-changing');
+pic[0].offsetHeight;
+
+pic.css('background-image', 'url(' + data.pic + ')');
+
+setTimeout(function() {
+    pic.removeClass('is-changing');
+}, 20);
         
         $('.tistolsTitleMS .tn-atom').addClass('fade');
         $('.tistolsPersonMS .tn-atom').addClass('fade');
         $('.tistolsDescMS .tn-atom').addClass('fade');
-        $('.tistolsPicMS .tn-atom').addClass('fade');
 
         setTimeout(function() {
             $('.tistolsTitleMS .tn-atom').removeClass('fade');
             $('.tistolsPersonMS .tn-atom').removeClass('fade');
             $('.tistolsDescMS .tn-atom').removeClass('fade');
-            $('.tistolsPicMS .tn-atom').removeClass('fade');
         }, 800);
     }
 }
