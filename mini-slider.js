@@ -318,7 +318,10 @@ $(function() {
 }
 
 function initGenerated(generated_object, slide_duration, mobile_generated_object = "", breakpoint = 980) {
-    if (mobile_generated_object && window.matchMedia('(max-width: ' + breakpoint + 'px)').matches) {
+
+    var isMobile = window.innerWidth <= breakpoint || screen.width <= breakpoint;
+
+    if (mobile_generated_object && isMobile) {
         generated_object = mobile_generated_object;
     }
 
