@@ -87,7 +87,7 @@ function init(dm = 0) {
   stroke-dashoffset: 251; 
   animation: tistolsfillCircle `+ slide_duration +`s linear forwards; 
 }
-.tistolsPicMS .tn-atom {
+.tistolsPicMSmob .tn-atom {
     background-position: center center;
     background-size: cover;
     background-repeat: no-repeat;
@@ -95,7 +95,7 @@ function init(dm = 0) {
     overflow: hidden;
 }
 
-.tistolsPicMS .tn-atom::before {
+.tistolsPicMSmob .tn-atom::before {
     content: "";
     position: absolute;
     inset: 0;
@@ -108,7 +108,7 @@ function init(dm = 0) {
     pointer-events: none;
 }
 
-.tistolsPicMS .tn-atom.is-changing::before {
+.tistolsPicMSmob .tn-atom.is-changing::before {
     opacity: 0;
 }
 @keyframes tistolsfillCircle {
@@ -118,11 +118,11 @@ function init(dm = 0) {
 }
 
     
-[class*="tistolsCircleTab"] {
+[class*="tistolsCircleTabmob"] {
     transform: scale(0.8);
     transition: all 0.1s linear;
 }
- [class*="tistolsCircleTab"]:hover {
+ [class*="tistolsCircleTabmob"]:hover {
      transform: scale(1)
  }
 
@@ -162,7 +162,7 @@ function rgbToHex(rgb) {
 }
 
 function startAnimation(tabNumber) {
-    var circle = $('.tistolsCircleTab' + tabNumber + ' .tistols-animated-circle');
+    var circle = $('.tistolsCircleTabmob' + tabNumber + ' .tistols-animated-circle');
     circle.css('stroke-dashoffset', circle.css('stroke-dasharray'));
 }
 
@@ -175,7 +175,7 @@ function updateInfo(tabNumber) {
         $('.tistolsTitleMS .tn-atom').text(data.title);
         $('.tistolsPersonMS .tn-atom').text(data.person);
         $('.tistolsDescMS .tn-atom').text(data.decs);
-        var pic = $('.tistolsPicMS .tn-atom');
+        var pic = $('.tistolsPicMSmob .tn-atom');
 var oldPic = pic.css('background-image');
 
 pic.css('--tistols-prev-pic', oldPic);
@@ -201,9 +201,9 @@ requestAnimationFrame(function() {
 }
 
 $(function() {
-    var totalSlides = $('[class*="tistolsCircleTab"]').length
+    var totalSlides = $('[class*="tistolsCircleTabmob"]').length
 
-    $('[class*="tistolsCircleTab"]').each(function() {
+    $('[class*="tistolsCircleTabmob"]').each(function() {
         $(this).find('.tn-atom').append(svg);
         var circle = $(this).find('.tistols-animated-circle');
         var rgbColor = $(this).find('.tn-atom').css('background-color');
@@ -211,21 +211,21 @@ $(function() {
         circle.attr('stroke', hexColor);
     });
     
-    $('.tistolsCircleTab1').addClass('act');
+    $('.tistolsCircleTabmob1').addClass('act');
     startAnimation(1);
 
-    $('[class*="tistolsCircleTab"]').click(function() {
-        $('[class*="tistolsCircleTab"]').removeClass('act');
+    $('[class*="tistolsCircleTabmob"]').click(function() {
+        $('[class*="tistolsCircleTabmob"]').removeClass('act');
         $(this).addClass('act');
-        var tabNumber = parseInt($(this).attr('class').split(' ').find(c => c.startsWith('tistolsCircleTab')).match(/\\d+/)[0]);
+        var tabNumber = parseInt($(this).attr('class').split(' ').find(c => c.startsWith('tistolsCircleTabmob')).match(/\\d+/)[0]);
         updateInfo(tabNumber);
     });
 
     $('.tistols-animated-circle').on('animationend', function() {
-        var currentTab = parseInt($('.act').attr('class').split(' ').find(c => c.startsWith('tistolsCircleTab')).match(/\\d+/)[0]);
+        var currentTab = parseInt($('.act').attr('class').split(' ').find(c => c.startsWith('tistolsCircleTabmob')).match(/\\d+/)[0]);
         var nextTab = (currentTab % totalSlides) + 1;
-        $('[class*="tistolsCircleTab"]').removeClass('act');
-        $('.tistolsCircleTab' + nextTab).addClass('act');
+        $('[class*="tistolsCircleTabmob"]').removeClass('act');
+        $('.tistolsCircleTabmob' + nextTab).addClass('act');
         startAnimation(nextTab);
         updateInfo(nextTab);
     });
@@ -337,7 +337,7 @@ function initGenerated(generated_object, slide_duration) {
   stroke-dashoffset: 251; 
   animation: tistolsfillCircle `+ slide_duration +`s linear forwards; 
 }
-.tistolsPicMS .tn-atom {
+.tistolsPicMSmob .tn-atom {
     background-position: center center;
     background-size: cover;
     background-repeat: no-repeat;
@@ -345,7 +345,7 @@ function initGenerated(generated_object, slide_duration) {
     overflow: hidden;
 }
 
-.tistolsPicMS .tn-atom::before {
+.tistolsPicMSmob .tn-atom::before {
     content: "";
     position: absolute;
     inset: 0;
@@ -372,7 +372,7 @@ function initGenerated(generated_object, slide_duration) {
     transform: scale(0.8);
     transition: all 0.1s linear;
 }
- [class*="tistolsCircleTab"]:hover {
+ [class*="tistolsCircleTabmob"]:hover {
      transform: scale(1)
  }
 
@@ -412,7 +412,7 @@ function rgbToHex(rgb) {
 }
 
 function startAnimation(tabNumber) {
-    var circle = $('.tistolsCircleTab' + tabNumber + ' .tistols-animated-circle');
+    var circle = $('.tistolsCircleTabmob' + tabNumber + ' .tistols-animated-circle');
     circle.css('stroke-dashoffset', circle.css('stroke-dasharray'));
 }
 
@@ -425,7 +425,7 @@ function updateInfo(tabNumber) {
         $('.tistolsTitleMS .tn-atom').text(data.title);
         $('.tistolsPersonMS .tn-atom').text(data.person);
         $('.tistolsDescMS .tn-atom').text(data.decs);
-        var pic = $('.tistolsPicMS .tn-atom');
+        var pic = $('.tistolsPicMSmob .tn-atom');
 var oldPic = pic.css('background-image');
 
 pic.css('--tistols-prev-pic', oldPic);
@@ -451,9 +451,9 @@ requestAnimationFrame(function() {
 }
 
 $(function() {
-    var totalSlides = $('[class*="tistolsCircleTab"]').length
+    var totalSlides = $('[class*="tistolsCircleTabmob"]').length
 
-    $('[class*="tistolsCircleTab"]').each(function() {
+    $('[class*="tistolsCircleTabmob"]').each(function() {
         $(this).find('.tn-atom').append(svg);
         var circle = $(this).find('.tistols-animated-circle');
         var rgbColor = $(this).find('.tn-atom').css('background-color');
@@ -461,21 +461,21 @@ $(function() {
         circle.attr('stroke', hexColor);
     });
     
-    $('.tistolsCircleTab1').addClass('act');
+    $('.tistolsCircleTabmob1').addClass('act');
     startAnimation(1);
 
-    $('[class*="tistolsCircleTab"]').click(function() {
-        $('[class*="tistolsCircleTab"]').removeClass('act');
+    $('[class*="tistolsCircleTabmob"]').click(function() {
+        $('[class*="tistolsCircleTabmob"]').removeClass('act');
         $(this).addClass('act');
-        var tabNumber = parseInt($(this).attr('class').split(' ').find(c => c.startsWith('tistolsCircleTab')).match(/\\d+/)[0]);
+        var tabNumber = parseInt($(this).attr('class').split(' ').find(c => c.startsWith('tistolsCircleTabmob')).match(/\\d+/)[0]);
         updateInfo(tabNumber);
     });
 
     $('.tistols-animated-circle').on('animationend', function() {
-        var currentTab = parseInt($('.act').attr('class').split(' ').find(c => c.startsWith('tistolsCircleTab')).match(/\\d+/)[0]);
+        var currentTab = parseInt($('.act').attr('class').split(' ').find(c => c.startsWith('tistolsCircleTabmob')).match(/\\d+/)[0]);
         var nextTab = (currentTab % totalSlides) + 1;
-        $('[class*="tistolsCircleTab"]').removeClass('act');
-        $('.tistolsCircleTab' + nextTab).addClass('act');
+        $('[class*="tistolsCircleTabmob"]').removeClass('act');
+        $('.tistolsCircleTabmob' + nextTab).addClass('act');
         startAnimation(nextTab);
         updateInfo(nextTab);
     });
