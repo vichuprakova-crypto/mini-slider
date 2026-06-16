@@ -358,7 +358,7 @@ function initGenerated(generated_object, slide_duration) {
     pointer-events: none;
 }
 
-.tistolsPicMS .tn-atom.is-changing::before {
+.tistolsPicMSmob .tn-atom.is-changing::before {
     opacity: 0;
 }
 @keyframes tistolsfillCircle {
