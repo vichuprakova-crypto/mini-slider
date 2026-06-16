@@ -317,7 +317,11 @@ $(function() {
     });
 }
 
-function initGenerated(generated_object, slide_duration) {
+function initGenerated(generated_object, slide_duration, mobile_generated_object = "", breakpoint = 980) {
+    if (mobile_generated_object && window.matchMedia('(max-width: ' + breakpoint + 'px)').matches) {
+        generated_object = mobile_generated_object;
+    }
+
     let images_format = "";
 
     document.write(`<!--SL10 - Модификация для Тильды. Слайдер из миниатюр с прогресс-баром https://mod.tistols.com/mini-slider -->
