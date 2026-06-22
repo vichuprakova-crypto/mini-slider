@@ -1,174 +1,245 @@
-/*
-  mini-slider-safe-light.js
-  Безопасная облегченная версия.
-  Оставлена оригинальная функция initGenerated() из исходного файла.
-  Удалены: генератор Tistols init(), подключение второй jQuery.
-  jQuery отдельно не подключается — на Tilda он уже есть.
-*/
-
 function initGenerated(generated_object, slide_duration) {
+  (function () {
+    const duration = Number(slide_duration) || 7;
+    const fadeDuration = 700;
+    let slides = {};
+    let current = 1;
+    let timer = null;
+    let initialized = false;
+    let tries = 0;
 
+    try {
+      slides = new Function("return ({" + generated_object + "});")();
+    } catch (error) {
+      console.error("Mini slider data error:", error);
+      return;
+    }
 
-    let images_format = "";
+    const totalSlides = Object.keys(slides).length;
+    if (!totalSlides) return;
 
-    document.write(`<!--SL10 - Модификация для Тильды. Слайдер из миниатюр с прогресс-баром https://mod.tistols.com/mini-slider -->
-<style>
-.tistols-circle-svg {
-  width: 130%; 
-  height: 130%; 
-}
-.tistols-animated-circle {
-    opacity: 0
-}
-.act .tistols-animated-circle {
-    opacity: 1;
-  stroke-dasharray: 251; 
-  stroke-dashoffset: 251; 
-  animation: tistolsfillCircle `+ slide_duration +`s linear forwards; 
-}
+    function addStyles() {
+      if (document.getElementById("tistols-mini-slider-style")) return;
+
+      const style = document.createElement("style");
+      style.id = "tistols-mini-slider-style";
+      style.textContent = `
 .tistolsPicMS .tn-atom {
-    background-position: center center;
-    background-size: cover;
-    background-repeat: no-repeat;
-    position: relative;
-    overflow: hidden;
+  position: relative;
+  overflow: hidden;
+  background-position: center center;
+  background-size: cover;
+  background-repeat: no-repeat;
 }
 
 .tistolsPicMS .tn-atom::before {
-    content: "";
-    position: absolute;
-    inset: 0;
-    background-image: var(--tistols-prev-pic);
-    background-position: center center;
-    background-size: cover;
-    background-repeat: no-repeat;
-    opacity: 0;
-    transition: opacity .8s ease;
-    pointer-events: none;
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image: var(--tistols-prev-pic);
+  background-position: center center;
+  background-size: cover;
+  background-repeat: no-repeat;
+  opacity: 0;
+  transition: opacity ${fadeDuration}ms ease;
+  pointer-events: none;
+  z-index: 1;
 }
 
 .tistolsPicMS .tn-atom.is-changing::before {
-    opacity: 0;
+  opacity: 1;
 }
-@keyframes tistolsfillCircle {
+
+.tistols-circle-svg {
+  width: 130%;
+  height: 130%;
+  pointer-events: none;
+}
+
+.tistols-animated-circle {
+  opacity: 0;
+  stroke: #fff;
+  stroke-dasharray: 251;
+  stroke-dashoffset: 251;
+}
+
+.act .tistols-animated-circle {
+  opacity: 1;
+  animation: tistolsFillCircle ${duration}s linear forwards;
+}
+
+@keyframes tistolsFillCircle {
   to {
     stroke-dashoffset: 0;
   }
 }
 
-    
 [class*="tistolsCircleTab"] {
-    transform: scale(0.8);
-    transition: all 0.1s linear;
+  transform: scale(0.8);
+  transition: transform 0.15s linear;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
 }
- [class*="tistolsCircleTab"]:hover {
-     transform: scale(1)
- }
 
-    .act {
-        transform: scale(1.1)!important
+[class*="tistolsCircleTab"]:hover {
+  transform: scale(1);
+}
+
+[class*="tistolsCircleTab"].act {
+  transform: scale(1.1) !important;
+}
+`;
+      document.head.appendChild(style);
     }
 
-    .fade {
-        animation: fade 0.8s ease-out forwards !important;
+    function getTabs() {
+      return Array.from(document.querySelectorAll('[class*="tistolsCircleTab"]'));
     }
-    
-    @keyframes fade {
-        0% {
-            opacity: 0;
-            transform: none
+
+    function getPicAtom() {
+      return document.querySelector(".tistolsPicMS .tn-atom");
+    }
+
+    function getTabNumber(tab) {
+      const match = (tab.className || "").match(/tistolsCircleTab(\d+)/);
+      return match ? Number(match[1]) : null;
+    }
+
+    function addSvg(tab) {
+      const atom = tab.querySelector(".tn-atom");
+      if (!atom) return;
+
+      atom.style.position = "relative";
+
+      if (atom.querySelector(".tistols-circle-svg")) return;
+
+      atom.insertAdjacentHTML(
+        "beforeend",
+        `<svg class="tistols-circle-svg" viewBox="0 0 100 100" style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);">
+          <circle cx="50" cy="50" r="40" fill="none" stroke="transparent" stroke-width="2"></circle>
+          <circle class="tistols-animated-circle" cx="50" cy="50" r="40" fill="none" stroke="#fff" stroke-width="2"></circle>
+        </svg>`
+      );
+    }
+
+    function restartCircle(tab) {
+      const circle = tab && tab.querySelector(".tistols-animated-circle");
+      if (!circle) return;
+
+      circle.style.animation = "none";
+      circle.offsetHeight;
+      circle.style.animation = "";
+      circle.style.strokeDashoffset = circle.style.strokeDasharray;
+    }
+
+    function setActiveTab(index) {
+      const tabs = getTabs();
+      tabs.forEach((tab) => tab.classList.remove("act"));
+
+      const activeTab = document.querySelector(".tistolsCircleTab" + index);
+
+      if (activeTab) {
+        activeTab.classList.add("act");
+        restartCircle(activeTab);
+      }
+    }
+
+    function changeImage(index) {
+      const picAtom = getPicAtom();
+      const slide = slides[index];
+
+      if (!picAtom || !slide || !slide.pic) return;
+
+      const previousImage = picAtom.style.backgroundImage || getComputedStyle(picAtom).backgroundImage;
+
+      picAtom.style.setProperty("--tistols-prev-pic", previousImage);
+      picAtom.classList.add("is-changing");
+      picAtom.style.backgroundImage = "url(" + slide.pic + ")";
+
+      window.setTimeout(() => {
+        picAtom.classList.remove("is-changing");
+      }, 40);
+    }
+
+    function showSlide(index) {
+      if (!slides[index]) index = 1;
+
+      current = index;
+      setActiveTab(index);
+      changeImage(index);
+
+      window.clearTimeout(timer);
+
+      timer = window.setTimeout(() => {
+        const next = current >= totalSlides ? 1 : current + 1;
+        showSlide(next);
+      }, duration * 1000);
+    }
+
+    function bindTabs() {
+      getTabs().forEach((tab) => {
+        if (tab.dataset.tistolsSliderReady === "1") return;
+
+        tab.dataset.tistolsSliderReady = "1";
+
+        const handler = function (event) {
+          event.preventDefault();
+
+          const index = getTabNumber(tab);
+          if (!index) return;
+
+          showSlide(index);
+        };
+
+        tab.addEventListener("click", handler);
+        tab.addEventListener("touchend", handler, { passive: false });
+      });
+    }
+
+    function preloadImages() {
+      Object.keys(slides).forEach((key) => {
+        if (!slides[key] || !slides[key].pic) return;
+
+        const img = new Image();
+        img.src = slides[key].pic;
+      });
+    }
+
+    function init() {
+      const tabs = getTabs();
+      const picAtom = getPicAtom();
+
+      if (!tabs.length || !picAtom) {
+        tries += 1;
+
+        if (tries < 80) {
+          window.setTimeout(init, 100);
         }
-        100% {
-            opacity: 1;
-            transform: none
-        }
+
+        return;
+      }
+
+      addStyles();
+      preloadImages();
+      tabs.forEach(addSvg);
+      bindTabs();
+
+      if (!initialized) {
+        initialized = true;
+        showSlide(1);
+      }
     }
-</style>
-<script>
-var svg = \`<svg class="tistols-circle-svg" viewBox="0 0 100 100" style="position: absolute;top: 50%;left: 50%; transform: translate(-50%,-50%);">
-        <circle cx="50" cy="50" r="40" fill="none" stroke="transparent" stroke-width="2"></circle>
-    <circle class="tistols-animated-circle" cx="50" cy="50" r="40" fill="none" stroke="#00f" stroke-width="2"></circle>
-</svg>\`;
 
-function rgbToHex(rgb) {
-    if (!rgb) return ""; 
-    var rgbValues = rgb.match(/^rgb\\(\\s*(\\d{1,3})\\s*,\\s*(\\d{1,3})\\s*,\\s*(\\d{1,3})\\s*\\)$/);
-    if (!rgbValues) return ""; 
-    function hex(x) {
-        return ("0" + parseInt(x).toString(16)).slice(-2);
+    if (document.readyState === "loading") {
+      document.addEventListener("DOMContentLoaded", init);
+    } else {
+      init();
     }
-    return "#" + hex(rgbValues[1]) + hex(rgbValues[2]) + hex(rgbValues[3]);
-}
 
-function startAnimation(tabNumber) {
-    var circle = jQuery('.tistolsCircleTab' + tabNumber + ' .tistols-animated-circle');
-    circle.css('stroke-dashoffset', circle.css('stroke-dasharray'));
-}
-
-function updateInfo(tabNumber) {
-    var info = {`+ generated_object +`};
-
-    if (info.hasOwnProperty(tabNumber)) {
-        var data = info[tabNumber];
-
-        jQuery('.tistolsTitleMS .tn-atom').text(data.title);
-        jQuery('.tistolsPersonMS .tn-atom').text(data.person);
-        jQuery('.tistolsDescMS .tn-atom').text(data.decs);
-        var pic = jQuery('.tistolsPicMS .tn-atom');
-var oldPic = pic.css('background-image');
-
-pic.css('--tistols-prev-pic', oldPic);
-pic.addClass('is-changing');
-pic[0].offsetHeight;
-
-pic.css('background-image', 'url(' + data.pic + ')');
-
-requestAnimationFrame(function() {
-    pic.removeClass('is-changing');
-});
-        
-        jQuery('.tistolsTitleMS .tn-atom').addClass('fade');
-        jQuery('.tistolsPersonMS .tn-atom').addClass('fade');
-        jQuery('.tistolsDescMS .tn-atom').addClass('fade');
-
-        setTimeout(function() {
-            jQuery('.tistolsTitleMS .tn-atom').removeClass('fade');
-            jQuery('.tistolsPersonMS .tn-atom').removeClass('fade');
-            jQuery('.tistolsDescMS .tn-atom').removeClass('fade');
-        }, 800);
-    }
-}
-
-jQuery(function() {
-    var totalSlides = jQuery('[class*="tistolsCircleTab"]').length
-
-    jQuery('[class*="tistolsCircleTab"]').each(function() {
-        jQuery(this).find('.tn-atom').append(svg);
-        var circle = jQuery(this).find('.tistols-animated-circle');
-        var rgbColor = jQuery(this).find('.tn-atom').css('background-color');
-        var hexColor = rgbToHex(rgbColor);
-        circle.attr('stroke', hexColor);
+    window.addEventListener("load", function () {
+      window.setTimeout(init, 300);
+      window.setTimeout(init, 1000);
     });
-    
-    jQuery('.tistolsCircleTab1').addClass('act');
-    startAnimation(1);
-
-    jQuery('[class*="tistolsCircleTab"]').click(function() {
-        jQuery('[class*="tistolsCircleTab"]').removeClass('act');
-        jQuery(this).addClass('act');
-        var tabNumber = parseInt(jQuery(this).attr('class').split(' ').find(c => c.startsWith('tistolsCircleTab')).match(/\\d+/)[0]);
-        updateInfo(tabNumber);
-    });
-
-    jQuery('.tistols-animated-circle').on('animationend', function() {
-        var currentTab = parseInt(jQuery('.act').attr('class').split(' ').find(c => c.startsWith('tistolsCircleTab')).match(/\\d+/)[0]);
-        var nextTab = (currentTab % totalSlides) + 1;
-        jQuery('[class*="tistolsCircleTab"]').removeClass('act');
-        jQuery('.tistolsCircleTab' + nextTab).addClass('act');
-        startAnimation(nextTab);
-        updateInfo(nextTab);
-    });
-});
-
-</script>`);
+  })();
 }
